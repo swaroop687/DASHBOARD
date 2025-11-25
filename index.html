@@ -2,100 +2,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AP Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f4f6f8;
-        }
-        header {
-            background-color: #1f2937;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 1.5em;
-        }
-        .container {
-            display: flex;
-        }
-        nav {
-            width: 200px;
-            background-color: #111827;
-            color: white;
-            padding: 20px;
-            height: 100vh;
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-        }
-        nav ul li {
-            margin: 15px 0;
-        }
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-        }
-        main {
-            flex: 1;
-            padding: 20px;
-        }
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .card h2 {
-            margin: 10px 0;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Dashboard</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+    }
+    header {
+        background: #1f2937;
+        color: #fff;
+        padding: 15px;
+        text-align: center;
+        font-size: 1.5em;
+    }
+    .container {
+        display: flex;
+    }
+    nav {
+        width: 220px;
+        background: #111827;
+        color: #fff;
+        padding: 20px;
+        transition: width 0.3s;
+    }
+    nav.collapsed {
+        width: 60px;
+    }
+    nav ul {
+        list-style: none;
+        padding: 0;
+    }
+    nav ul li {
+        margin: 15px 0;
+    }
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+    }
+    .toggle-btn {
+        background: #374151;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    main {
+        flex: 1;
+        padding: 20px;
+    }
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    .card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    .form-section, .invoice-section {
+        margin-top: 30px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    input, button {
+        padding: 10px;
+        margin: 5px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background: #f3f4f6;
+    }
+</style>
 </head>
 <body>
-    <header>AP Automation Dashboard</header>
-    <div class="container">
-        <nav>
-            <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Invoices</a></li>
-                <li><a href="#">Vendors</a></li>
-                <li><a href="#">Approvals</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
-        </nav>
-        <main>
-            <h1>Overview of Accounts Payable</h1>
-            <div class="cards">
-                <div class="card">
-                    <h2>Total Invoices</h2>
-                    <p>5 Active invoices</p>
-                </div>
-                <div class="card">
-                    <h2>Pending Amount</h2>
-                    <p>$1,250</p>
-                </div>
-                <div class="card">
-                    <h2>Awaiting Approval</h2>
-                    <p>1 Requires action</p>
-                </div>
-                <div class="card">
-                    <h2>Overdue</h2>
-                    <p>1 Needs immediate attention</p>
-                </div>
-            </div>
-        </main>
-    </div>
+<header>AP Automation Dashboard</header>
+<div class="container">
+    <nav id="sidebar">
+        <button class="toggle-btn" onclick="toggleSidebar()">☰ Toggle</button>
+        <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#vendors">Vendors</a></li>
+            <li><a href="#invoices">Invoices</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h1>Overview</h1>
+        <div class="cards">
+            <div class="card"><h2>Total Invoices</h2><p id="invoiceCount">0</p></div>
+            <div class="card"><h2>Pending Amount</h2><p id="pendingAmount">$0</p></div>
+            <div class="card"><h2>Vendors</h2><p id="vendorCount">0</p></div>
+        </div>
+
+        <!-- Vendor Form -->
+        <div class="form-section" id="vendors">
+            <h2>Add Vendor</h2>
+            <input type="text" id="vendorName" placeholder="Vendor Name">
+            <button onclick="addVendor()">Add Vendor</button>
+            <ul id="vendorList"></ul>
+        </div>
+
+        <!-- Invoice Section -->
+        <div class="invoice-section" id="invoices">
+            <h2>Invoices</h2>
+            <input type="text" id="invoiceDesc" placeholder="Description">
+            <input type="number" id="invoiceAmount" placeholder="Amount">
+            <button onclick="addInvoice()">Add Invoice</button>
+            <table>
+                <thead>
+                    <tr><th>Description</th><th>Amount</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody id="invoiceTable"></tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script>
+    let vendors = [];
+    let invoices = [];
+
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+
+    function addVendor() {
+        const name = document.getElementById('vendorName').value.trim();
+        if (name) {
+            vendors.push(name);
+            document.getElementById('vendorList').innerHTML += `<li>${name}</li>`;
+            document.getElementById('vendorName').value = '';
+            document.getElementById('vendorCount').innerText = vendors.length;
+        }
+    }
+
+    function addInvoice() {
+        const desc = document.getElementById('invoiceDesc').value.trim();
+        const amount = parseFloat(document.getElementById('invoiceAmount').value);
+        if (desc && amount > 0) {
+            invoices.push({desc, amount, status: 'Pending'});
+            updateInvoiceTable();
+            document.getElementById('invoiceDesc').value = '';
+            document.getElementById('invoiceAmount').value = '';
+            updateDashboard();
+        }
+    }
+
+    function updateInvoiceTable() {
+        const table = document.getElementById('invoiceTable');
+        table.innerHTML = '';
+        invoices.forEach((inv, index) => {
+            table.innerHTML += `
+                <tr>
+                    <td>${inv.desc}</td>
+                    <td>$${inv.amount}</td>
+                    <td>${inv.status}</td>
+                    <td>
+                        <button onclick="markPaid(${index})">Mark Paid</button>
+                        <button onclick="removeInvoice(${index})">Remove</button>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    function markPaid(index) {
+        invoices[index].status = 'Paid';
+        updateInvoiceTable();
+    }
+
+    function removeInvoice(index) {
+        invoices.splice(index, 1);
+        updateInvoiceTable();
+        updateDashboard();
+    }
+
+    function updateDashboard() {
+        document.getElementById('invoiceCount').innerText = invoices.length;
+        const pending = invoices.filter(inv => inv.status === 'Pending')
+                                .reduce((sum, inv) => sum + inv.amount, 0);
+        document.getElementById('pendingAmount').innerText = `$${pending}`;
+    }
+</script>
 </body>
-
-
-
-
+</html>
