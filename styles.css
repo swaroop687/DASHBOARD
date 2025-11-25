@@ -1,0 +1,47 @@
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  margin: 0;
+}
+.sidebar {
+  width: 220px;
+  background: #f4f4f4;
+  padding: 20px;
+  height: 100vh;
+}
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+.sidebar li {
+  padding: 10px;
+  cursor: pointer;
+}
+.sidebar li:hover {
+  background: #ddd;
+}
+main {
+  flex: 1;
+  padding: 20px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+.badge {
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: #fff;
+}
+.badge.pending { background: #f0ad4e; }
+.badge.approved { background: #5cb85c; }
+.badge.paid { background: #0275d8; }
+
